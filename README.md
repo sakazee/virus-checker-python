@@ -94,3 +94,104 @@ Especially suspicious combinations:
 
 ```bash
 python3 quick_scan.py /var/www
+````
+
+### Excluding System Directories
+
+```bash
+python3 quick_scan.py /var/www --exclude /proc --exclude /sys --exclude /dev --exclude /var/lib/docker
+```
+
+### Save Report to File
+
+```bash
+python3 quick_scan.py /var/www --out report.json
+```
+
+---
+
+## Available Options
+
+| Option               | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `--exclude PATH`     | Exclude a directory prefix (repeatable)     |
+| `--max-bytes NUMBER` | Maximum bytes read per file (default 512KB) |
+| `--max-size NUMBER`  | Maximum file size to scan (default 10MB)    |
+| `--ext .EXT`         | Add extra extension to scan (repeatable)    |
+| `--out FILE`         | Write output to JSON file                   |
+
+---
+
+## Performance Tuning
+
+For large servers:
+
+Reduce bytes read per file:
+
+```bash
+python3 quick_scan.py /var/www --max-bytes 262144
+```
+
+Skip larger files:
+
+```bash
+python3 quick_scan.py /var/www --max-size 5242880
+```
+
+---
+
+## Report Format
+
+Output is generated in JSON format:
+
+```json
+{
+  "root": "/var/www",
+  "scanned_files": 1234,
+  "skipped_entries": 567,
+  "findings": [
+    {
+      "path": "/var/www/suspicious.php",
+      "size": 2048,
+      "hits": ["php_eval", "php_base64_decode"]
+    }
+  ]
+}
+```
+
+---
+
+## Limitations
+
+* Signature based detection only
+* False positives are possible
+* Encrypted or compressed payloads may not be detected
+* Minified JavaScript may trigger alerts
+
+---
+
+## Security Notes
+
+* Do not run this script via web browser
+* Do not place it inside your web root
+* Avoid running as root unless necessary
+* Do not immediately delete flagged files without reviewing them
+
+---
+
+## Recommended Enhancements
+
+For stronger security coverage, consider:
+
+* Adding CMS-specific rules (WordPress, Laravel, etc.)
+* Excluding framework storage/cache directories
+* Integrating YARA rules
+* Implementing SHA256 file integrity baselining
+* Running alongside ClamAV
+
+---
+
+### দ্রুত রান কমান্ড (রিকমেন্ডেড)
+```bash
+python3 quick_scan.py /var/www --exclude /proc --exclude /sys --exclude /dev --exclude /var/lib/docker --out report.json
+````
