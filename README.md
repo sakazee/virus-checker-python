@@ -188,10 +188,3 @@ For stronger security coverage, consider:
 * Integrating YARA rules
 * Implementing SHA256 file integrity baselining
 * Running alongside ClamAV
-
----
-
-### দ্রুত রান কমান্ড (রিকমেন্ডেড)
-```bash
-python3 quick_scan.py /var/www --exclude /proc --exclude /sys --exclude /dev --exclude /var/lib/docker --out report.json
-````
